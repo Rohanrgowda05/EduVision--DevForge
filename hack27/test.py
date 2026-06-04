@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_groq.chat_models import ChatGroq
-from langchain import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
 llm = ChatGroq(
     model="llama-3.3-70b-instruct",

@@ -52,9 +52,12 @@ class CNNVisualization(Scene):
             step_text.become(Text(new_text, font_size=26).move_to(text_box.get_center()))
             self.play(FadeIn(step_text, shift=DOWN*0.3), run_time=0.3)
 
-        self.play(FadeIn(Text("Example animation start"), shift=RIGHT))
+        # CRITICAL: Call update_text directly, DO NOT wrap it in self.play()
+        update_text("Example animation start")
         self.wait(1)
-        MPORTANT RULES (NEVER BREAK):
+
+IMPORTANT RULES (NEVER BREAK):
+- CRITICAL: Call `update_text("your text")` directly. DO NOT wrap it in `self.play()` because it already plays animations internally.
 - DO NOT use MathTex or Tex.
 - DO NOT use add_coordinates() because it forces LaTeX DecimalNumber.
 - DO NOT use axes labels that require LaTeX.
@@ -62,6 +65,14 @@ class CNNVisualization(Scene):
 - Use ONLY Text() for labels and numbers.
 - If you need mathematical expressions, write them directly using Text().
 - All numbers drawn on screen must use Text(), not Tex or MathTex.
+- CRITICAL: The `Text` class in Manim does NOT have a `get_part_by_text` method. If you try to use `my_text.get_part_by_text(...)`, the code will CRASH.
+- You must animate the entire Text object at once, or create separate Text objects if you want to animate parts independently.
+- DO NOT use any methods that slice or select parts of a Text object (like `[0]`).
+- DO NOT use `get_unit_normal()` or `get_unit_vector()` on Line objects. These methods DO NOT EXIST in Manim and will CRASH. Instead, calculate normal vectors manually using numpy: e.g. `direction = B - A; normal = np.array([-direction[1], direction[0], 0]); normal = normal / np.linalg.norm(normal)`.
+- DO NOT use `RightAngle()` with raw point coordinates. Use `RightAngle(Line(p1, p2), Line(p1, p3), ...)` with actual Line objects.
+- DO NOT call `.set_opacity()` as a method on animate. Use `.set_fill(opacity=...)` instead.
+- Keep the code extremely simple and robust. Ensure proper python indentation.
+- Always import numpy as np at the top if you use numpy operations.
 """
 
     user_instruction = f"""
@@ -80,7 +91,10 @@ Do not include comments, explanations, JSON, or backticks.
 
     response = llm.invoke(messages)
     manim_code = response.content
+    
+    # Post-process to remove markdown formatting if Gemini included it despite instructions
+    manim_code = manim_code.replace("```python", "").replace("```", "").strip()
+    
     return manim_code
-
 
 

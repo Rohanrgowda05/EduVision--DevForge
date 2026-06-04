@@ -29,22 +29,29 @@ def generate_animation():
         user_prompt = data["prompt"]
         print("Received Prompt:", user_prompt)
 
-        # 1️⃣ Generate DSL (Manim code)
-        print("⏳ Generating DSL…")
+        # 1. Generate DSL (Manim code)
+        print("[...] Generating DSL...")
         manim_code = generate_dsl(user_prompt)
+        print("[OK] Generated Manim code:")
+        print(manim_code)
+        print("---END CODE---")
 
-        # 2️⃣ Extract scene name
+        # 2. Extract scene name
         scene_name = extract_scene_name(manim_code)
+        print(f"[INFO] Detected scene name: {scene_name}")
 
-        # 3️⃣ Run Manim render
-        print("🎬 Rendering animation…")
+        # 3. Run Manim render
+        print("[...] Rendering animation...")
         output_path = "static/videos/final.mp4"
         result = run_manim_script(manim_code, scene_name, output_path)
 
         if result is None:
-            return jsonify({"error": "Manim failed to render"}), 500
+            return jsonify({
+                "error": "Manim failed to render. The generated code may have issues.",
+                "scene_name": scene_name
+            }), 500
 
-        # 4️⃣ Return working video URL
+        # 4. Return working video URL
         return jsonify({
             "status": "success",
             "video_url": "/static/videos/final.mp4"
@@ -55,8 +62,9 @@ def generate_animation():
         return jsonify({"error": str(e)}), 500
 
 
+
 # ------------------------------------------
 # Main entry
 # ------------------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
