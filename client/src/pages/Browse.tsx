@@ -6,11 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { BrowseItem } from "@/components/BrowseItem";
 import { useApp } from "@/context/AppContext";
 
-const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
-if (!API_KEY) {
-  console.error('YouTube API key is not set. Please set VITE_YOUTUBE_API_KEY in your .env file');
-}
-
 const categories = ["All", "Physics", "Chemistry", "Biology", "Mathematics", "Astronomy", "Tutorials", "Science"];
 
 const formatPublishedDate = (dateString: string): string => {
@@ -133,42 +128,37 @@ export default function Browse() {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      if (!searchQuery.trim() || !API_KEY) {
-        if (!API_KEY) {
-          setError('YouTube API key is not configured');
-        }
+      if (!searchQuery.trim()) {
+        setVideos([]);
         return;
       }
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
-        // Add category to search query if not 'All'
-        const searchTerm = selectedCategory !== 'All' 
-          ? `${searchQuery} ${selectedCategory}` 
-          : searchQuery;
-          
         const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?` +
-          `part=snippet&maxResults=12&type=video&q=${encodeURIComponent(searchTerm)}&key=${API_KEY}`
+          `/api/browse?q=${encodeURIComponent(searchQuery.trim())}&category=${encodeURIComponent(selectedCategory)}`
         );
-        
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error?.message || 'Failed to fetch videos');
+          throw new Error(errorData.error || errorData.message || "Failed to fetch videos");
         }
-        
+
         const data = await response.json();
         setVideos(data.items || []);
+        if (data.message && (!data.items || data.items.length === 0)) {
+          setError(data.message);
+        }
       } catch (err) {
-        console.error('Error fetching videos:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load videos. Please try again later.');
+        console.error("Error fetching videos:", err);
+        setError(err instanceof Error ? err.message : "Failed to load videos. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
-    
+
     // Add debounce to prevent too many API calls
     const timer = setTimeout(() => {
       if (searchQuery.trim()) {
@@ -177,7 +167,7 @@ export default function Browse() {
         setVideos([]);
       }
     }, 500);
-    
+
     return () => clearTimeout(timer);
   }, [searchQuery, selectedCategory]);
   

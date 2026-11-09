@@ -12,7 +12,7 @@ interface QuizCardProps {
   totalQuestions: number;
   question: string;
   options: QuizOption[];
-  correctAnswer: string;
+  correctAnswer?: string;
   selectedAnswer: string | null;
   onSelect: (optionId: string) => void;
   showResult?: boolean;

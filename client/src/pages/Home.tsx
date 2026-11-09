@@ -4,6 +4,7 @@ import { Sparkles, Play, GraduationCap, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { VideoPlaceholder } from "@/components/VideoPlaceholder";
 import { NotesPanel } from "@/components/NotesPanel";
 import { useApp } from "@/context/AppContext";
@@ -12,68 +13,46 @@ import { useToast } from "@/hooks/use-toast";
 export default function Home() {
   const [prompt, setPrompt] = useState("");
   const {
-    generateVideo,
+    submitJob,
     isGenerating,
-    setIsGenerating,
+    jobStatusMessage,
+    currentPlan,
     currentVideo,
     currentNotes,
-    markNotesDownloaded
+    markNotesDownloaded,
   } = useApp();
 
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-const handleGenerate = async () => {
-  if (isGenerating) return;
-  setIsGenerating(true);
+  const handleGenerate = async () => {
+    if (isGenerating) return;
 
-  if (!prompt.trim()) {
-    toast({
-      title: "Please enter a prompt",
-      description: "Describe what you'd like to visualize",
-      variant: "destructive",
-    });
-    setIsGenerating(false); // Make sure to set isGenerating to false
-    return;
-  }
-
-  try {
-    const res = await fetch("http://127.0.0.1:5000/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-      cache: 'no-store' // Prevent any caching of the request
-    });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Backend responded with ${res.status} ${text}`);
+    if (!prompt.trim()) {
+      toast({
+        title: "Please enter a prompt",
+        description: "Describe what you'd like to visualize",
+        variant: "destructive",
+      });
+      return;
     }
 
-    const data = await res.json();
-    if (!data.video_url) throw new Error("Missing video_url");
+    try {
+      await submitJob(prompt.trim());
 
-    const backendUrl = data.video_url.startsWith("http")
-      ? data.video_url
-      : `http://127.0.0.1:5000${data.video_url}`;
-
-    await generateVideo(prompt, backendUrl);
-
-    toast({
-      title: "Animation Generated!",
-      description: "Your visualization is ready to watch",
-    });
-  } catch (err) {
-    console.error("handleGenerate error:", err);
-    toast({
-      title: "Generation failed",
-      description: err instanceof Error ? err.message : "Please try again",
-      variant: "destructive",
-    });
-  } finally {
-    setIsGenerating(false);
-  }
-};
+      toast({
+        title: "Animation Ready!",
+        description: "Your visualization has been generated and saved.",
+      });
+    } catch (err: any) {
+      console.error("handleGenerate error:", err);
+      toast({
+        title: "Generation request failed",
+        description: err instanceof Error ? err.message : "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleWatchAgain = () => {
     console.log("Playing video again...");
@@ -145,7 +124,7 @@ const handleGenerate = async () => {
                 {isGenerating ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Generating...
+                    {jobStatusMessage || "Processing..."}
                   </>
                 ) : (
                   <>
@@ -172,10 +151,43 @@ const handleGenerate = async () => {
           </CardContent>
         </Card>
 
+        {currentPlan && (
+          <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 flex items-start gap-3 shadow-sm" data-testid="study-plan-card">
+            <Sparkles className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Personalized Study Plan ({currentPlan.action.replace('_', ' ')})
+                </span>
+                {currentPlan.difficulty && (
+                  <Badge variant="outline" className="text-xs capitalize">
+                    {currentPlan.difficulty}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-foreground font-medium" data-testid="study-plan-rationale">
+                {currentPlan.rationale}
+              </p>
+              {currentPlan.focusConcepts && currentPlan.focusConcepts.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-xs text-muted-foreground">Focus concepts:</span>
+                  {currentPlan.focusConcepts.map((fc) => (
+                    <Badge key={fc} variant="secondary" className="text-xs">
+                      {fc.replace(/_/g, ' ')}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         <VideoPlaceholder
           isGenerating={isGenerating}
           hasVideo={!!currentVideo}
-          // prompt={currentVideo?.prompt || prompt}
+          prompt={currentVideo?.prompt || prompt}
+          statusMessage={jobStatusMessage}
+          planRationale={currentPlan?.rationale}
           videoUrl={currentVideo?.videoUrl}
           onWatchAgain={handleWatchAgain}
         />

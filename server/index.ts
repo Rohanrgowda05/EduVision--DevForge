@@ -1,8 +1,10 @@
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import { startWorker } from "./worker";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { clerkMiddleware } from "@clerk/express";
 
 // Silence all console output (logs, errors, warnings)
 // Toggle by setting QUIET=false in the environment if you need logs back
@@ -77,6 +79,9 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  if (process.env.CLERK_SECRET_KEY) {
+    app.use(clerkMiddleware());
+  }
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -110,6 +115,7 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+      startWorker().catch((err) => console.error("Worker failed to start:", err));
     },
   );
 })();

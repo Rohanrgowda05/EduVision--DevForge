@@ -11,16 +11,29 @@ import { useToast } from "@/hooks/use-toast";
 interface Question {
   id: string;
   question: string;
+  concept?: string;
   options: { id: string; text: string }[];
+  correctAnswer?: string;
+}
+
+interface QuestionFeedback {
+  id: string;
+  question: string;
+  concept: string;
+  chosen: string | null;
   correctAnswer: string;
+  isCorrect: boolean;
 }
 
 export default function Quiz() {
   const { currentPrompt, submitQuiz, currentNotes } = useApp();
   const [, setLocation] = useLocation();
+  const [quizId, setQuizId] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState<QuestionFeedback[]>([]);
   const [result, setResult] = useState<{ passed: boolean; message: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -30,36 +43,40 @@ export default function Quiz() {
   const prompt = currentPrompt || "Doppler Effect";
   const currentQuestion = questions[currentIndex];
 
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/quiz/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, notesText: currentNotes?.notesText ?? null }),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (data?.questions && Array.isArray(data.questions)) {
-          setQuestions(data.questions);
-          setCurrentIndex(0);
-          setAnswers({});
-          return;
-        }
-        throw new Error("Malformed quiz payload");
-      } catch (err) {
-        toast({
-          title: "Failed to load quiz",
-          description: "Using fallback questions.",
-          variant: "destructive",
-        });
-        // Fallback to empty set to avoid inconsistent UI
-        setQuestions([]);
-      } finally {
-        setLoading(false);
+  const fetchQuestions = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/quiz/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, notesText: currentNotes?.notesText ?? null }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data?.questions && Array.isArray(data.questions)) {
+        setQuizId(data.quizId);
+        setQuestions(data.questions);
+        setCurrentIndex(0);
+        setAnswers({});
+        setSubmitted(false);
+        setResult(null);
+        setFeedback([]);
+        return;
       }
-    };
+      throw new Error("Malformed quiz payload");
+    } catch (err) {
+      toast({
+        title: "Failed to load quiz",
+        description: "Using fallback questions.",
+        variant: "destructive",
+      });
+      setQuestions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prompt]);
@@ -81,24 +98,23 @@ export default function Quiz() {
   };
 
   const handleSubmit = async () => {
+    if (!quizId) return;
     setIsSubmitting(true);
     try {
-      const score = questions.filter(
-        (q) => answers[q.id] === q.correctAnswer
-      ).length;
-      
-      const response = await submitQuiz(prompt, score, questions.length);
+      const response = await submitQuiz(quizId, answers);
       setResult(response);
+      setScore(response.score);
+      setFeedback(response.feedback || []);
       setSubmitted(true);
-      
+
       toast({
         title: response.passed ? "Quiz Passed!" : "Quiz Complete",
         description: response.message,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Failed to submit quiz",
-        description: "Please try again",
+        description: error.message || "Please try again",
         variant: "destructive",
       });
     } finally {
@@ -107,15 +123,11 @@ export default function Quiz() {
   };
 
   const handleRetry = () => {
-    setAnswers({});
-    setCurrentIndex(0);
-    setSubmitted(false);
-    setResult(null);
+    fetchQuestions();
   };
 
-  const score = questions.filter((q) => answers[q.id] === q.correctAnswer).length;
-  const passed = score >= 3;
-  const allAnswered = Object.keys(answers).length === questions.length;
+  const passed = result?.passed ?? (score >= Math.ceil(questions.length * 0.6));
+  const allAnswered = questions.length > 0 && Object.keys(answers).length === questions.length;
 
   if (submitted && result) {
     return (
@@ -153,9 +165,42 @@ export default function Quiz() {
                   "h-full rounded-full transition-all",
                   passed ? "bg-green-500" : "bg-red-500"
                 )}
-                style={{ width: `${(score / questions.length) * 100}%` }}
+                style={{ width: `${(score / (questions.length || 5)) * 100}%` }}
               />
             </div>
+
+            {feedback.length > 0 && (
+              <div className="mb-6 text-left space-y-3">
+                <h3 className="font-semibold text-sm text-foreground mb-2">Concept Breakdown</h3>
+                {feedback.map((item, idx) => (
+                  <div
+                    key={item.id || idx}
+                    className="p-3 rounded-md bg-muted/50 border border-border flex items-start justify-between gap-2 text-xs"
+                  >
+                    <div>
+                      <div className="font-medium text-foreground">
+                        Q{idx + 1}: {item.question}
+                      </div>
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-primary/10 text-primary font-mono text-[11px]">
+                          {item.concept}
+                        </span>
+                        {!item.isCorrect && (
+                          <span className="text-muted-foreground">
+                            Correct: <strong className="text-foreground">{item.correctAnswer.toUpperCase()}</strong>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {item.isCorrect ? (
+                      <span className="text-green-600 font-bold text-sm">✓</span>
+                    ) : (
+                      <span className="text-red-500 font-bold text-sm">✗</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="flex flex-col gap-3">
               <Button onClick={handleRetry} variant="outline" data-testid="button-retry-quiz">

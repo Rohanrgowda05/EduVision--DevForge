@@ -1,0 +1,312 @@
+[
+  {
+    "id": "scenario_01_no_history",
+    "name": "No History",
+    "description": "Brand new learner exploring Quantum Entanglement for the first time with zero quiz attempts.",
+    "prompt": "Visualize quantum entanglement and Bell states",
+    "topic_hint": "quantum_entanglement",
+    "recent_asset": null,
+    "quiz_history": [],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_02_one_unlucky_miss",
+    "name": "One Unlucky Miss",
+    "description": "Learner got 1 wrong answer on wave interference. Evidence count = 1 (< 3 threshold), so concept must NOT be marked weak.",
+    "prompt": "Explain wave interference patterns",
+    "topic_hint": "wave_interference",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "superposition_principle", "correct": false, "days_ago": 0.5 }
+    ],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_03_two_misses_insufficient_evidence",
+    "name": "Two Misses Insufficient Evidence",
+    "description": "Learner missed 2 questions on diffraction. Evidence count = 2 (< 3 threshold), so concept remains unknown, not weak.",
+    "prompt": "Demonstrate single slit diffraction",
+    "topic_hint": "diffraction",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "single_slit_minima", "correct": false, "days_ago": 1.0 },
+      { "concept": "single_slit_minima", "correct": false, "days_ago": 0.5 }
+    ],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_04_consistent_weakness_single",
+    "name": "Consistent Weakness Single Concept",
+    "description": "Learner failed 4 consecutive questions on doppler shift formula (0/4 correct). Evidence >= 3 and mastery < 0.6.",
+    "prompt": "Visualize the Doppler effect",
+    "topic_hint": "doppler_effect",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "doppler_shift_formula", "correct": false, "days_ago": 1.0 },
+      { "concept": "doppler_shift_formula", "correct": false, "days_ago": 0.8 },
+      { "concept": "doppler_shift_formula", "correct": false, "days_ago": 0.5 },
+      { "concept": "doppler_shift_formula", "correct": false, "days_ago": 0.1 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["doppler_shift_formula"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_05_consistent_weakness_multiple",
+    "name": "Consistent Weakness Multiple Concepts",
+    "description": "Learner struggles on frequency shift (0/4) and wave speed (1/4), but mastered relative motion (4/4).",
+    "prompt": "Doppler effect sound waves",
+    "topic_hint": "doppler_effect",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "frequency_shift", "correct": false, "days_ago": 1.0 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.8 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.5 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.2 },
+      { "concept": "wave_speed", "correct": false, "days_ago": 1.0 },
+      { "concept": "wave_speed", "correct": false, "days_ago": 0.7 },
+      { "concept": "wave_speed", "correct": false, "days_ago": 0.4 },
+      { "concept": "wave_speed", "correct": true, "days_ago": 0.1 },
+      { "concept": "relative_motion", "correct": true, "days_ago": 1.0 },
+      { "concept": "relative_motion", "correct": true, "days_ago": 0.8 },
+      { "concept": "relative_motion", "correct": true, "days_ago": 0.5 },
+      { "concept": "relative_motion", "correct": true, "days_ago": 0.2 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["frequency_shift", "wave_speed"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_06_weak_concepts_exceeding_max_focus",
+    "name": "Weak Concepts Exceeding Max Focus Cap",
+    "description": "Learner has 4 weak concepts. System must prioritize the 3 weakest concepts only.",
+    "prompt": "Thermodynamics principles",
+    "topic_hint": "thermodynamics",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "carnot_efficiency", "correct": false, "days_ago": 0.9 },
+      { "concept": "carnot_efficiency", "correct": false, "days_ago": 0.7 },
+      { "concept": "carnot_efficiency", "correct": false, "days_ago": 0.4 },
+      { "concept": "carnot_efficiency", "correct": false, "days_ago": 0.1 },
+      { "concept": "entropy_change", "correct": false, "days_ago": 0.9 },
+      { "concept": "entropy_change", "correct": false, "days_ago": 0.7 },
+      { "concept": "entropy_change", "correct": false, "days_ago": 0.4 },
+      { "concept": "entropy_change", "correct": false, "days_ago": 0.1 },
+      { "concept": "heat_capacities", "correct": false, "days_ago": 0.9 },
+      { "concept": "heat_capacities", "correct": false, "days_ago": 0.7 },
+      { "concept": "heat_capacities", "correct": false, "days_ago": 0.4 },
+      { "concept": "heat_capacities", "correct": false, "days_ago": 0.1 },
+      { "concept": "adiabatic_expansion", "correct": false, "days_ago": 0.9 },
+      { "concept": "adiabatic_expansion", "correct": false, "days_ago": 0.7 },
+      { "concept": "adiabatic_expansion", "correct": false, "days_ago": 0.4 },
+      { "concept": "adiabatic_expansion", "correct": false, "days_ago": 0.1 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["carnot_efficiency", "entropy_change", "heat_capacities"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_07_mixed_performance_no_weak",
+    "name": "Mixed Performance No Weak Concepts",
+    "description": "Learner has 2/3 correct on all concepts. Mastery = 3/5 = 0.60 (above 0.60 weak cutoff, below 0.80 strong cutoff).",
+    "prompt": "Newtonian gravity and orbits",
+    "topic_hint": "newtonian_gravity",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "orbital_velocity", "correct": true, "days_ago": 1.0 },
+      { "concept": "orbital_velocity", "correct": true, "days_ago": 0.5 },
+      { "concept": "orbital_velocity", "correct": false, "days_ago": 0.2 },
+      { "concept": "gravitational_force", "correct": true, "days_ago": 1.0 },
+      { "concept": "gravitational_force", "correct": true, "days_ago": 0.5 },
+      { "concept": "gravitational_force", "correct": false, "days_ago": 0.2 }
+    ],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_08_all_strong_sufficient_evidence",
+    "name": "All Strong With Sufficient Evidence",
+    "description": "Learner has 4/4 correct on both concepts. Mastery = 5/6 = 0.833 (>= 0.80) with evidence >= 3. Action = advanced.",
+    "prompt": "Pythagorean theorem geometric proof",
+    "topic_hint": "pythagorean_theorem",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "hypotenuse_calculation", "correct": true, "days_ago": 1.0 },
+      { "concept": "hypotenuse_calculation", "correct": true, "days_ago": 0.8 },
+      { "concept": "hypotenuse_calculation", "correct": true, "days_ago": 0.5 },
+      { "concept": "hypotenuse_calculation", "correct": true, "days_ago": 0.2 },
+      { "concept": "right_triangle_properties", "correct": true, "days_ago": 1.0 },
+      { "concept": "right_triangle_properties", "correct": true, "days_ago": 0.8 },
+      { "concept": "right_triangle_properties", "correct": true, "days_ago": 0.5 },
+      { "concept": "right_triangle_properties", "correct": true, "days_ago": 0.2 }
+    ],
+    "expected": {
+      "action": "advanced",
+      "weak_concepts": [],
+      "difficulty": "challenging"
+    }
+  },
+  {
+    "id": "scenario_09_all_correct_insufficient_evidence",
+    "name": "All Correct Insufficient Evidence",
+    "description": "Learner got 1/1 correct on a concept. While raw score is 100%, evidence = 1 (< 3). Status is unknown, NOT strong.",
+    "prompt": "Special relativity time dilation",
+    "topic_hint": "special_relativity",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "lorentz_factor", "correct": true, "days_ago": 0.3 }
+    ],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_10_stale_history",
+    "name": "Stale History Decayed Evidence",
+    "description": "Learner missed 4 questions 90 days ago. Due to 14-day exponential half-life, weighted evidence decays below 3, resetting status to unknown.",
+    "prompt": "Electric flux and Gauss's law",
+    "topic_hint": "gauss_law",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "gaussian_surface", "correct": false, "days_ago": 90.0 },
+      { "concept": "gaussian_surface", "correct": false, "days_ago": 88.0 },
+      { "concept": "gaussian_surface", "correct": false, "days_ago": 85.0 },
+      { "concept": "gaussian_surface", "correct": false, "days_ago": 80.0 }
+    ],
+    "expected": {
+      "action": "generate_new",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_11_recent_video_reuse",
+    "name": "Recent Video Reuse Within 24h",
+    "description": "Learner generated a video for this topic 4 hours ago and has no weak concepts. Action = reuse_existing.",
+    "prompt": "Photosynthesis light dependent reactions",
+    "topic_hint": "photosynthesis",
+    "recent_asset": {
+      "video_url": "/static/videos/photosynthesis_prev.mp4",
+      "hours_ago": 4.0
+    },
+    "quiz_history": [],
+    "expected": {
+      "action": "reuse_existing",
+      "weak_concepts": [],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_12_recent_video_with_weakness",
+    "name": "Recent Video Overridden by Weakness",
+    "description": "Learner generated a video 3 hours ago, but then failed quiz on Calvin cycle (0/4). Weakness takes precedence over reuse.",
+    "prompt": "Photosynthesis process and dark reactions",
+    "topic_hint": "photosynthesis",
+    "recent_asset": {
+      "video_url": "/static/videos/photosynthesis_prev.mp4",
+      "hours_ago": 3.0
+    },
+    "quiz_history": [
+      { "concept": "calvin_cycle_fixation", "correct": false, "days_ago": 0.1 },
+      { "concept": "calvin_cycle_fixation", "correct": false, "days_ago": 0.08 },
+      { "concept": "calvin_cycle_fixation", "correct": false, "days_ago": 0.05 },
+      { "concept": "calvin_cycle_fixation", "correct": false, "days_ago": 0.02 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["calvin_cycle_fixation"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_13_topic_label_drift",
+    "name": "Topic Label Drift",
+    "description": "Prompt describes acoustic Doppler shift using different vocabulary ('shift in sound pitch as siren approaches'). Maps to doppler_effect with weakness on frequency_shift.",
+    "prompt": "Demonstrate the shift in sound pitch as an ambulance siren approaches and passes an observer",
+    "topic_hint": "doppler_effect",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "frequency_shift", "correct": false, "days_ago": 1.2 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.9 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.4 },
+      { "concept": "frequency_shift", "correct": false, "days_ago": 0.1 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["frequency_shift"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_14_borderline_mastery_threshold",
+    "name": "Borderline Mastery Threshold",
+    "description": "Learner got 2/4 correct (mastery = 3/6 = 0.50, < 0.60) with evidence = 4 (>= 3). Borderline case marks concept as weak.",
+    "prompt": "Harmonic oscillator motion",
+    "topic_hint": "harmonic_oscillator",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "restoring_force", "correct": false, "days_ago": 0.8 },
+      { "concept": "restoring_force", "correct": false, "days_ago": 0.6 },
+      { "concept": "restoring_force", "correct": true, "days_ago": 0.4 },
+      { "concept": "restoring_force", "correct": true, "days_ago": 0.2 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["restoring_force"],
+      "difficulty": "standard"
+    }
+  },
+  {
+    "id": "scenario_15_high_volume_advanced_mastery",
+    "name": "High Volume Advanced Mastery",
+    "description": "Learner answered 15 questions across 3 concepts with 14/15 correct (mastery > 0.85 each, high evidence). Action = advanced.",
+    "prompt": "Matrix multiplication and linear transformations",
+    "topic_hint": "matrix_transformations",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "matrix_product", "correct": true, "days_ago": 2.0 },
+      { "concept": "matrix_product", "correct": true, "days_ago": 1.5 },
+      { "concept": "matrix_product", "correct": true, "days_ago": 1.0 },
+      { "concept": "matrix_product", "correct": true, "days_ago": 0.5 },
+      { "concept": "matrix_product", "correct": true, "days_ago": 0.1 },
+      { "concept": "vector_rotation", "correct": true, "days_ago": 2.0 },
+      { "concept": "vector_rotation", "correct": true, "days_ago": 1.5 },
+      { "concept": "vector_rotation", "correct": true, "days_ago": 1.0 },
+      { "concept": "vector_rotation", "correct": true, "days_ago": 0.5 },
+      { "concept": "vector_rotation", "correct": true, "days_ago": 0.1 },
+      { "concept": "determinant_scaling", "correct": true, "days_ago": 2.0 },
+      { "concept": "determinant_scaling", "correct": true, "days_ago": 1.5 },
+      { "concept": "determinant_scaling", "correct": true, "days_ago": 1.0 },
+      { "concept": "determinant_scaling", "correct": true, "days_ago": 0.5 },
+      { "concept": "determinant_scaling", "correct": true, "days_ago": 0.1 }
+    ],
+    "expected": {
+      "action": "advanced",
+      "weak_concepts": [],
+      "difficulty": "challenging"
+    }
+  }
+]

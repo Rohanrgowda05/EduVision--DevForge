@@ -10,4 +10,7 @@ class TestScene(Scene):
 """
 
 result = run_manim_script(code, "TestScene")
-print(f"Result: {result}")
+print(f"Result ok: {result.ok}")
+print(f"Video path: {result.video_path}")
+print(f"Error type: {result.error_type}")
+print(f"Duration (s): {result.duration_s}")

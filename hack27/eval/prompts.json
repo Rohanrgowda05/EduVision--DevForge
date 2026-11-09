@@ -1,0 +1,353 @@
+[
+  {
+    "id": "p01",
+    "topic": "Doppler Effect",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize the Doppler effect showing compressed circular wave fronts in front of a moving sound source and stretched circular wave fronts behind it with clear labels."
+  },
+  {
+    "id": "p02",
+    "topic": "Projectile Motion",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize projectile motion of a ball launched at an angle, displaying its parabolic trajectory, velocity vectors, and maximum height."
+  },
+  {
+    "id": "p03",
+    "topic": "Gravitational Orbit",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize Keplerian planetary orbit around a central star, showing an elliptical path with varying orbital speed."
+  },
+  {
+    "id": "p04",
+    "topic": "Wave Interference",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize constructive and destructive interference of two sinusoidal wave pulses traveling toward each other."
+  },
+  {
+    "id": "p05",
+    "topic": "Standing Waves",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize standing waves on a vibrating string demonstrating nodes, antinodes, and fundamental harmonics."
+  },
+  {
+    "id": "p06",
+    "topic": "Electromagnetic Spectrum",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize the electromagnetic spectrum showing relative wavelengths from radio waves through visible light to gamma rays."
+  },
+  {
+    "id": "p07",
+    "topic": "Photoelectric Effect",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize photons striking a metal surface plate and ejecting photoelectrons with kinetic energy dependent on frequency."
+  },
+  {
+    "id": "p08",
+    "topic": "Carnot Heat Engine",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize the Carnot thermodynamic cycle on a Pressure-Volume diagram showing isothermal and adiabatic expansion and compression."
+  },
+  {
+    "id": "p09",
+    "topic": "Simple Harmonic Motion",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize a mass on a spring oscillating horizontally and compare its displacement with a rotating circle projection."
+  },
+  {
+    "id": "p10",
+    "topic": "Snell's Law of Refraction",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize light refraction across an air-water boundary showing normal line, incident angle, and refracted angle."
+  },
+  {
+    "id": "p11",
+    "topic": "Pythagorean Theorem",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize a geometric proof of the Pythagorean Theorem showing three squares erected on the sides of a right triangle."
+  },
+  {
+    "id": "p12",
+    "topic": "Unit Circle Trigonometry",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize the unit circle showing sine and cosine projections as a rotating vector sweeps through angles."
+  },
+  {
+    "id": "p13",
+    "topic": "Riemann Sum",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize approximating the area under a curve using rectangular Riemann sums as the number of rectangles increases."
+  },
+  {
+    "id": "p14",
+    "topic": "Taylor Series Expansion",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize polynomial Taylor series approximations converging to a sine curve with higher degree terms."
+  },
+  {
+    "id": "p15",
+    "topic": "Matrix Linear Transformation",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize a 2D linear transformation stretching and shearing a grid using basis vectors i-hat and j-hat."
+  },
+  {
+    "id": "p16",
+    "topic": "Golden Spiral",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize Fibonacci squares partitioning a rectangle and generating the logarithmic golden spiral curve."
+  },
+  {
+    "id": "p17",
+    "topic": "Normal Distribution",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize a Gaussian normal distribution bell curve showing the 68-95-99.7 empirical rule standard deviation intervals."
+  },
+  {
+    "id": "p18",
+    "topic": "Binary Search Algorithm",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize binary search on a sorted array of numbers highlighting low, mid, and high pointers narrowing the target range."
+  },
+  {
+    "id": "p19",
+    "topic": "Merge Sort",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize merge sort recursively splitting an unsorted array into halves and merging sorted subarrays."
+  },
+  {
+    "id": "p20",
+    "topic": "Dijkstra Shortest Path",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize Dijkstra's algorithm exploring nodes in a weighted graph to find the shortest path from start to goal."
+  },
+  {
+    "id": "p21",
+    "topic": "Linked List Insertion",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize singly linked list node insertion, demonstrating pointer adjustments from the predecessor to the new node."
+  },
+  {
+    "id": "p22",
+    "topic": "Binary Search Tree Traversal",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize in-order depth-first traversal of a binary search tree visiting left child, root, and right child in sorted order."
+  },
+  {
+    "id": "p23",
+    "topic": "Convolutional Neural Network Filter",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize a 3x3 convolution kernel sliding across an input matrix image to produce a feature activation map."
+  },
+  {
+    "id": "p24",
+    "topic": "Stack vs Queue Operations",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize LIFO stack push and pop operations alongside FIFO queue enqueue and dequeue operations."
+  },
+  {
+    "id": "p25",
+    "topic": "Hydrogen Bonding in Water",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize polarity of water molecules showing partial positive hydrogen and partial negative oxygen forming intermolecular hydrogen bonds."
+  },
+  {
+    "id": "p26",
+    "topic": "Balancing Chemical Equations",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize balancing the combustion of methane CH4 + 2O2 -> CO2 + 2H2O using colored molecular sphere models."
+  },
+  {
+    "id": "p27",
+    "topic": "Exothermic vs Endothermic Profile",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize reaction coordinate energy diagrams contrasting activation energy and enthalpy change for exothermic versus endothermic reactions."
+  },
+  {
+    "id": "p28",
+    "topic": "Atomic Shell Orbitals",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize Bohr atomic energy levels showing electron transitions absorbing and emitting photons of specific frequencies."
+  },
+  {
+    "id": "p29",
+    "topic": "Acid Base Titration Curve",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize a strong acid-strong base titration curve showing pH change as titrant volume increases, highlighting the equivalence point."
+  },
+  {
+    "id": "p30",
+    "topic": "Ideal Gas Law P-V-T",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize gas particles in an enclosed container colliding with walls to demonstrate Boyle's law pressure volume relationship."
+  },
+  {
+    "id": "p31",
+    "topic": "DNA Replication Fork",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize DNA double helix unwinding at a replication fork showing leading strand and lagging strand synthesis."
+  },
+  {
+    "id": "p32",
+    "topic": "Synaptic Transmission",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize neurotransmitter vesicles releasing signaling molecules across a synaptic cleft from axon terminal to receptor dendrite."
+  },
+  {
+    "id": "p33",
+    "topic": "Mitosis Cell Division",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize the stages of mitosis from prophase, metaphase chromosome alignment, anaphase separation, to telophase."
+  },
+  {
+    "id": "p34",
+    "topic": "Photosynthesis Overview",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize sunlight, carbon dioxide, and water entering a plant chloroplast to yield glucose sugar and oxygen gas."
+  },
+  {
+    "id": "p35",
+    "topic": "CRISPR-Cas9 Mechanism",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize the Cas9 enzyme guided by single-guide RNA binding to target double-stranded DNA and making a precise cut."
+  },
+  {
+    "id": "p36",
+    "topic": "Circle Area by Sector Unfolding",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize slicing a circle into wedge sectors and rearranging them into an alternating strip approaching a parallelogram of area pi*r^2."
+  },
+  {
+    "id": "p37",
+    "topic": "Sierpinski Triangle Fractal",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize recursive subdivision of an equilateral triangle into four smaller triangles, repeatedly removing the central inverted triangle."
+  },
+  {
+    "id": "p38",
+    "topic": "Voronoi Diagram",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize growing circular wavefronts from scattered seed points to form polygonal Voronoi boundary cells."
+  },
+  {
+    "id": "p39",
+    "topic": "Euler Characteristic",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize Platonic solid polyhedra verifying Euler's polyhedral formula V - E + F = 2 for tetrahedron and cube."
+  },
+  {
+    "id": "p40",
+    "topic": "Inscribed Angle Theorem",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize a circle showing that the inscribed angle subtending an arc is exactly half of the central angle subtending the same arc."
+  },
+  {
+    "id": "p41",
+    "topic": "Lorenz Strange Attractor",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize the chaotic butterfly trajectories of the Lorenz differential equations in 3D projection showing sensitive dependence on initial conditions."
+  },
+  {
+    "id": "p42",
+    "topic": "Quantum Bell Inequality",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize two entangled photons measured at different polarizer detector angles to demonstrate quantum correlation exceeding classical limits."
+  },
+  {
+    "id": "p43",
+    "topic": "Spacetime Curvature Black Hole",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize gravitational lensing and photon sphere orbits of light bending around the event horizon of a Schwarzschild black hole."
+  },
+  {
+    "id": "p44",
+    "topic": "Fast Fourier Transform Butterfly",
+    "category": "math",
+    "difficulty": "hard",
+    "prompt": "Visualize Cooley-Tukey radix-2 FFT butterfly computation network combining even and odd discrete frequency components."
+  },
+  {
+    "id": "p45",
+    "topic": "Non-Euclidean Hyperbolic Tessellation",
+    "category": "geometry",
+    "difficulty": "hard",
+    "prompt": "Visualize a Poincare disk conformal model displaying hyperbolic triangle tessellation repeating infinitely toward the boundary circle."
+  },
+  {
+    "id": "p46",
+    "topic": "Mandelbrot Fractal Zoom",
+    "category": "math",
+    "difficulty": "hard",
+    "prompt": "Visualize the complex plane iteration z = z^2 + c coloring divergent iterations to outline the cardoid boundary of the Mandelbrot set."
+  },
+  {
+    "id": "p47",
+    "topic": "Turing Machine State Transition",
+    "category": "cs",
+    "difficulty": "hard",
+    "prompt": "Visualize a Turing machine tape with read/write head moving left and right, updating binary symbols according to an internal finite state table."
+  },
+  {
+    "id": "p48",
+    "topic": "RSA Public Key Exchange",
+    "category": "cs",
+    "difficulty": "hard",
+    "prompt": "Visualize Diffie-Hellman or RSA modular exponentiation one-way trapdoor function encrypting and decrypting a message."
+  },
+  {
+    "id": "p49",
+    "topic": "Navier-Stokes Vortex Shedding",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize fluid streamlines flowing past a circular cylinder shedding alternating Von Karman vortex wake streets."
+  },
+  {
+    "id": "p50",
+    "topic": "Four-Stroke ICE Engine",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize the four mechanical cycles of an internal combustion engine: intake, compression, power spark ignition, and exhaust valve timing."
+  }
+]
+

@@ -1,0 +1,143 @@
+[
+  {
+    "id": "p01",
+    "topic": "Doppler Effect",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize the Doppler effect showing compressed circular wave fronts in front of a moving sound source and stretched circular wave fronts behind it with clear labels."
+  },
+  {
+    "id": "p02",
+    "topic": "Projectile Motion",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize projectile motion of a ball launched at an angle, displaying its parabolic trajectory, velocity vectors, and maximum height."
+  },
+  {
+    "id": "p04",
+    "topic": "Wave Interference",
+    "category": "physics",
+    "difficulty": "normal",
+    "prompt": "Visualize constructive and destructive interference of two sinusoidal wave pulses traveling toward each other."
+  },
+  {
+    "id": "p11",
+    "topic": "Pythagorean Theorem",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize a geometric proof of the Pythagorean Theorem showing three squares erected on the sides of a right triangle."
+  },
+  {
+    "id": "p12",
+    "topic": "Unit Circle Trigonometry",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize the unit circle showing sine and cosine projections as a rotating vector sweeps through angles."
+  },
+  {
+    "id": "p13",
+    "topic": "Riemann Sum",
+    "category": "math",
+    "difficulty": "normal",
+    "prompt": "Visualize approximating the area under a curve using rectangular Riemann sums as the number of rectangles increases."
+  },
+  {
+    "id": "p18",
+    "topic": "Binary Search Algorithm",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize binary search on a sorted array of numbers highlighting low, mid, and high pointers narrowing the target range."
+  },
+  {
+    "id": "p19",
+    "topic": "Merge Sort",
+    "category": "cs",
+    "difficulty": "normal",
+    "prompt": "Visualize merge sort recursively splitting an unsorted array into halves and merging sorted subarrays."
+  },
+  {
+    "id": "p25",
+    "topic": "Hydrogen Bonding in Water",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize polarity of water molecules showing partial positive hydrogen and partial negative oxygen forming intermolecular hydrogen bonds."
+  },
+  {
+    "id": "p27",
+    "topic": "Exothermic vs Endothermic Profile",
+    "category": "chemistry",
+    "difficulty": "normal",
+    "prompt": "Visualize reaction coordinate energy diagrams contrasting activation energy and enthalpy change for exothermic versus endothermic reactions."
+  },
+  {
+    "id": "p31",
+    "topic": "DNA Replication Fork",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize DNA double helix unwinding at a replication fork showing leading strand and lagging strand synthesis."
+  },
+  {
+    "id": "p33",
+    "topic": "Mitosis Cell Division",
+    "category": "biology",
+    "difficulty": "normal",
+    "prompt": "Visualize the stages of mitosis from prophase, metaphase chromosome alignment, anaphase separation, to telophase."
+  },
+  {
+    "id": "p36",
+    "topic": "Circle Area by Sector Unfolding",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize slicing a circle into wedge sectors and rearranging them into an alternating strip approaching a parallelogram of area pi*r^2."
+  },
+  {
+    "id": "p38",
+    "topic": "Voronoi Diagram",
+    "category": "geometry",
+    "difficulty": "normal",
+    "prompt": "Visualize growing circular wavefronts from scattered seed points to form polygonal Voronoi boundary cells."
+  },
+  {
+    "id": "p41",
+    "topic": "Lorenz Strange Attractor",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize the chaotic butterfly trajectories of the Lorenz differential equations in 3D projection showing sensitive dependence on initial conditions."
+  },
+  {
+    "id": "p42",
+    "topic": "Quantum Bell Inequality",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize two entangled photons measured at different polarizer detector angles to demonstrate quantum correlation exceeding classical limits."
+  },
+  {
+    "id": "p44",
+    "topic": "Fast Fourier Transform Butterfly",
+    "category": "math",
+    "difficulty": "hard",
+    "prompt": "Visualize Cooley-Tukey radix-2 FFT butterfly computation network combining even and odd discrete frequency components."
+  },
+  {
+    "id": "p46",
+    "topic": "Mandelbrot Fractal Zoom",
+    "category": "math",
+    "difficulty": "hard",
+    "prompt": "Visualize the complex plane iteration z = z^2 + c coloring divergent iterations to outline the cardoid boundary of the Mandelbrot set."
+  },
+  {
+    "id": "p47",
+    "topic": "Turing Machine State Transition",
+    "category": "cs",
+    "difficulty": "hard",
+    "prompt": "Visualize a Turing machine tape with read/write head moving left and right, updating binary symbols according to an internal finite state table."
+  },
+  {
+    "id": "p50",
+    "topic": "Four-Stroke ICE Engine",
+    "category": "physics",
+    "difficulty": "hard",
+    "prompt": "Visualize the four mechanical cycles of an internal combustion engine: intake, compression, power spark ignition, and exhaust valve timing."
+  }
+]
+

@@ -7,6 +7,8 @@ interface VideoPlaceholderProps {
   hasVideo?: boolean;
   prompt?: string;
   videoUrl?: string;
+  statusMessage?: string | null;
+  planRationale?: string | null;
   onWatchAgain?: () => void;
 }
 
@@ -15,6 +17,8 @@ export function VideoPlaceholder({
   hasVideo = false,
   prompt,
   videoUrl,
+  statusMessage,
+  planRationale,
   onWatchAgain,
 }: VideoPlaceholderProps) {
   if (isGenerating) {
@@ -26,11 +30,19 @@ export function VideoPlaceholder({
             <div className="w-12 h-12 rounded-full border-4 border-white/30 border-t-white animate-spin" />
           </div>
         </div>
-        <div className="text-center px-4 mt-4">
-          <p className="text-lg font-semibold text-foreground">Generating Animation</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Creating visualization for "{prompt}"
+        <div className="text-center px-4 mt-4 max-w-lg">
+          <p className="text-lg font-semibold text-foreground">
+            {statusMessage || "Generating Animation"}
           </p>
+          {planRationale ? (
+            <p className="text-sm font-medium text-primary mt-1">
+              {planRationale}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground mt-1">
+              {prompt ? `Creating visualization for "${prompt}"` : "Processing your prompt"}
+            </p>
+          )}
         </div>
         <div className="flex gap-1 mt-4">
           {[0, 1, 2].map((i) => (

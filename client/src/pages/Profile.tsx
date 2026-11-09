@@ -1,14 +1,39 @@
 import { useEffect } from "react";
-import { Video, FileText, Trophy, Flame, Clock } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocation } from "wouter";
+import {
+  Video,
+  FileText,
+  Trophy,
+  Flame,
+  Clock,
+  Brain,
+  AlertCircle,
+  CheckCircle2,
+  HelpCircle,
+  Info,
+  Sparkles,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { StatsCard } from "@/components/StatsCard";
 import { QuizHistoryItem } from "@/components/QuizHistoryItem";
 import { useApp } from "@/context/AppContext";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Profile() {
-  const { loadProfile, profileData, generatedVideos, quizAttempts, streak, notesDownloaded } = useApp();
+  const {
+    loadProfile,
+    profileData,
+    generatedVideos,
+    quizAttempts,
+    streak,
+    notesDownloaded,
+    submitJob,
+  } = useApp();
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   useEffect(() => {
     loadProfile();
@@ -18,6 +43,25 @@ export default function Profile() {
   const quizzes = profileData?.recentQuizzes || quizAttempts;
   const passRate = profileData?.passRate || 0;
   const passedQuizzes = profileData?.passedQuizzes || 0;
+  const topics = profileData?.topics || [];
+
+  const handlePracticeWeakAreas = async (topicName: string) => {
+    const prompt = `Practice and visualize weak concepts in ${topicName.replace(/_/g, " ")}`;
+    toast({
+      title: "Creating Remedial Study Job",
+      description: `Targeting weak concepts for ${topicName.replace(/_/g, " ")}...`,
+    });
+    setLocation("/");
+    try {
+      await submitJob(prompt);
+    } catch (e: any) {
+      toast({
+        title: "Could not create job",
+        description: e.message,
+        variant: "destructive",
+      });
+    }
+  };
 
   if (!profileData && videos.length === 0) {
     return (
@@ -75,6 +119,131 @@ export default function Profile() {
             variant="warning"
           />
         </div>
+
+        {/* Adaptive Concept Mastery Section */}
+        <Card data-testid="card-adaptive-mastery">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-primary" />
+                  Adaptive Concept Mastery
+                </CardTitle>
+                <CardDescription className="mt-1">
+                  Per-topic mastery computed from your quiz performance using recency-weighted decay
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Mastery explanation banner */}
+            <div className="p-4 rounded-lg bg-muted/60 border border-border flex items-start gap-3">
+              <Info className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+              <div className="text-xs text-muted-foreground leading-relaxed">
+                <p className="font-semibold text-foreground mb-0.5">How Mastery is Computed</p>
+                Recency-weighted exponential decay (14-day half-life) with Laplace smoothing:{" "}
+                <code className="px-1 py-0.5 rounded bg-background font-mono text-[11px]">
+                  mastery = (weightedCorrect + 1) / (weightedAttempts + 2)
+                </code>
+                . A concept requires at least 3 weighted attempts of evidence before being categorized as{" "}
+                <strong>Weak (&lt; 60%)</strong> or <strong>Strong (&ge; 80%)</strong>. Concepts with insufficient evidence remain <em>Unknown</em> to prevent premature conclusions.
+              </div>
+            </div>
+
+            {topics.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <Brain className="w-12 h-12 mx-auto mb-2 opacity-30" />
+                <p className="font-medium">No topic mastery data recorded yet</p>
+                <p className="text-sm mt-1">Take quizzes after watching videos to build your personalized knowledge profile.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {topics.map((topicItem) => {
+                  const weakCount = topicItem.profile.concepts.filter((c) => c.status === "weak").length;
+                  return (
+                    <div
+                      key={topicItem.id}
+                      className="p-4 rounded-xl border border-border bg-card space-y-4 shadow-sm"
+                      data-testid={`topic-mastery-${topicItem.id}`}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold text-base capitalize text-foreground">
+                            {topicItem.canonicalName.replace(/_/g, " ")}
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            {topicItem.profile.concepts.length} concepts tracked &bull; {topicItem.profile.totalAttempts} total quiz questions
+                          </p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant={weakCount > 0 ? "default" : "outline"}
+                          onClick={() => handlePracticeWeakAreas(topicItem.canonicalName)}
+                          className="self-start sm:self-auto"
+                          data-testid={`button-practice-${topicItem.id}`}
+                        >
+                          <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                          Practice weak areas
+                        </Button>
+                      </div>
+
+                      {topicItem.profile.concepts.length === 0 ? (
+                        <p className="text-xs text-muted-foreground italic">No concept breakdown yet for this topic.</p>
+                      ) : (
+                        <div className="space-y-3 pt-1">
+                          {topicItem.profile.concepts.map((concept) => {
+                            const pct = Math.round(concept.mastery * 100);
+                            return (
+                              <div key={concept.concept} className="space-y-1.5">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="font-medium capitalize text-foreground">
+                                    {concept.concept.replace(/_/g, " ")}
+                                  </span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-muted-foreground">
+                                      Evidence: {concept.evidence.toFixed(1)} ({concept.rawCorrect}/{concept.rawAttempts})
+                                    </span>
+                                    {concept.status === "weak" && (
+                                      <Badge variant="destructive" className="text-[10px] h-5 px-1.5 flex items-center gap-1">
+                                        <AlertCircle className="w-3 h-3" /> Weak ({pct}%)
+                                      </Badge>
+                                    )}
+                                    {concept.status === "strong" && (
+                                      <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] h-5 px-1.5 flex items-center gap-1">
+                                        <CheckCircle2 className="w-3 h-3" /> Strong ({pct}%)
+                                      </Badge>
+                                    )}
+                                    {concept.status === "unknown" && (
+                                      <Badge variant="secondary" className="text-[10px] h-5 px-1.5 flex items-center gap-1">
+                                        <HelpCircle className="w-3 h-3" /> Evaluating ({pct}%)
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
+                                  <div
+                                    className={`h-full transition-all rounded-full ${
+                                      concept.status === "weak"
+                                        ? "bg-destructive"
+                                        : concept.status === "strong"
+                                        ? "bg-emerald-500"
+                                        : "bg-primary/50"
+                                    }`}
+                                    style={{ width: `${Math.max(5, pct)}%` }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>

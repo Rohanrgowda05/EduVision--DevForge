@@ -1,23 +1,85 @@
+import os
+import time
+import random
+import re
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
-import json
+from langchain_core.messages import SystemMessage, HumanMessage
 
 load_dotenv()
 
+# Custom exception for rate limits
+class RateLimitExceededError(Exception):
+    def __init__(self, message: str, retry_after_s: float = 60.0):
+        super().__init__(message)
+        self.retry_after_s = retry_after_s
+
+
+# Shared LLM instance
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0,
-    top_p=1.0,              # <── THIS REDUCES HALLUCINATION A LOT
-    top_k=1,              # <── Forces most deterministic token selection
-    
+    top_k=1,
 )
 
-def generate_dsl(user_prompt: str) -> str:
-    """
-    Call Gemini and return ONLY pure Manim code (NO JSON).
-    """
+# Global tracker for rate limiting
+_last_call_timestamp: float = 0.0
 
-    system_prompt = """
+
+def _rate_limited_invoke(messages, max_retries: int = 5):
+    """
+    Invoke LLM with mandatory minimum interval and exponential backoff on 429/quota errors.
+    """
+    global _last_call_timestamp
+
+    min_interval = float(os.getenv("LLM_MIN_INTERVAL_S", "7.0"))
+    now = time.time()
+    elapsed = now - _last_call_timestamp
+    if elapsed < min_interval:
+        sleep_needed = min_interval - elapsed
+        time.sleep(sleep_needed)
+
+    for attempt in range(max_retries + 1):
+        try:
+            _last_call_timestamp = time.time()
+            response = llm.invoke(messages)
+            return response
+        except Exception as e:
+            err_str = str(e)
+            is_rate_limit = (
+                "429" in err_str
+                or "RESOURCE_EXHAUSTED" in err_str
+                or "quota" in err_str.lower()
+                or "rate limit" in err_str.lower()
+            )
+
+            if not is_rate_limit:
+                raise e
+
+            if attempt == max_retries:
+                # Extract retry-after if available in error
+                match = re.search(r"retry\s+after\s+(\d+)", err_str, re.IGNORECASE)
+                retry_after_s = float(match.group(1)) if match else 60.0
+                raise RateLimitExceededError(
+                    f"Gemini API rate limit exceeded after {max_retries} retries: {err_str}",
+                    retry_after_s=retry_after_s
+                )
+
+            # Exponential backoff with jitter
+            backoff_base = 2 ** (attempt + 1)
+            jitter = random.uniform(0.5, 1.5)
+            backoff_s = backoff_base + jitter
+
+            # Check if error message recommends specific delay
+            match = re.search(r"retry in (\d+(?:\.\d+)?)s", err_str, re.IGNORECASE)
+            if match:
+                backoff_s = max(backoff_s, float(match.group(1)) + 1.0)
+
+            print(f"[WARN] Gemini 429/quota hit. Backing off for {backoff_s:.1f}s (retry {attempt+1}/{max_retries})...")
+            time.sleep(backoff_s)
+
+
+MANIM_SYSTEM_RULES = """
 You are an educational Manim animation generator.
 
 You will receive a topic and must output ONLY valid Python Manim code.
@@ -73,28 +135,129 @@ IMPORTANT RULES (NEVER BREAK):
 - DO NOT call `.set_opacity()` as a method on animate. Use `.set_fill(opacity=...)` instead.
 - Keep the code extremely simple and robust. Ensure proper python indentation.
 - Always import numpy as np at the top if you use numpy operations.
+- Only import from manim, numpy, math, and random. Never import os, sys, subprocess, or open files.
 """
+
+
+def _clean_code(content: str) -> str:
+    """Strip markdown formatting and code fences."""
+    cleaned = content.strip()
+    if cleaned.startswith("```python"):
+        cleaned = cleaned[len("```python"):]
+    elif cleaned.startswith("```"):
+        cleaned = cleaned[len("```"):]
+    if cleaned.endswith("```"):
+        cleaned = cleaned[:-3]
+    return cleaned.strip()
+
+
+def _extract_token_usage(response) -> dict:
+    """Safely extract token usage metadata from LangChain response."""
+    usage = {}
+    try:
+        if hasattr(response, "usage_metadata") and response.usage_metadata:
+            usage = dict(response.usage_metadata)
+        elif hasattr(response, "response_metadata") and isinstance(response.response_metadata, dict):
+            raw_usage = (
+                response.response_metadata.get("usage_metadata")
+                or response.response_metadata.get("token_usage")
+            )
+            if isinstance(raw_usage, dict):
+                usage = dict(raw_usage)
+    except Exception:
+        pass
+    return usage
+
+
+def generate_dsl(
+    user_prompt: str,
+    focus_concepts: list = None,
+    difficulty: str = None,
+    return_usage: bool = False
+):
+    """
+    Call Gemini and return ONLY pure Manim code (NO JSON, NO Markdown).
+    If return_usage=True, returns tuple: (code, token_usage_dict).
+    """
+    extra_instructions = []
+    if focus_concepts and len(focus_concepts) > 0:
+        extra_instructions.append(f"Emphasize visually: {', '.join(focus_concepts)}.")
+    if difficulty:
+        extra_instructions.append(f"Visual difficulty level: {difficulty}.")
+
+    personalization_block = ("\n" + " ".join(extra_instructions) + "\n") if extra_instructions else ""
 
     user_instruction = f"""
 Generate a Manim animation for the following concept:
 
 {user_prompt}
-
+{personalization_block}
 Return ONLY the raw Manim Python code.
 Do not include comments, explanations, JSON, or backticks.
 """
 
     messages = [
-        ("system", system_prompt),
+        ("system", MANIM_SYSTEM_RULES),
         ("human", user_instruction),
     ]
 
-    response = llm.invoke(messages)
-    manim_code = response.content
-    
-    # Post-process to remove markdown formatting if Gemini included it despite instructions
-    manim_code = manim_code.replace("```python", "").replace("```", "").strip()
-    
-    return manim_code
+    response = _rate_limited_invoke(messages)
+    code = _clean_code(response.content)
+    if return_usage:
+        return code, _extract_token_usage(response)
+    return code
 
 
+def repair_dsl(
+    prompt: str,
+    previous_code: str,
+    error_text: str,
+    focus_concepts: list = None,
+    difficulty: str = None,
+    return_usage: bool = False
+):
+    """
+    Ask Gemini to fix errors in the previous Manim script.
+    Outputs the FULL corrected script with only necessary fixes.
+    If return_usage=True, returns tuple: (code, token_usage_dict).
+    """
+    extra_instructions = []
+    if focus_concepts and len(focus_concepts) > 0:
+        extra_instructions.append(f"Emphasize visually: {', '.join(focus_concepts)}.")
+    if difficulty:
+        extra_instructions.append(f"Visual difficulty level: {difficulty}.")
+
+    personalization_block = ("\n" + " ".join(extra_instructions) + "\n") if extra_instructions else ""
+
+    repair_instruction = f"""
+The following Manim script was generated for the topic:
+"{prompt}"
+{personalization_block}
+However, running or validating it failed with this error:
+---
+{error_text}
+---
+
+Here is the failing code:
+```python
+{previous_code}
+```
+
+Task:
+Fix the error and output the FULL corrected Python Manim script.
+Keep all existing animation logic intact; only fix what caused the error.
+Obey all the rules (use Text(), no MathTex/Tex, no get_part_by_text, no get_unit_normal, etc.).
+Output ONLY the raw Manim Python script.
+DO NOT include markdown fences, comments, or explanations.
+"""
+
+    messages = [
+        ("system", MANIM_SYSTEM_RULES),
+        ("human", repair_instruction),
+    ]
+
+    response = _rate_limited_invoke(messages)
+    code = _clean_code(response.content)
+    if return_usage:
+        return code, _extract_token_usage(response)
+    return code
