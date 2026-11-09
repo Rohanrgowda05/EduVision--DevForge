@@ -1,0 +1,20 @@
+{
+  "plan": {
+    "action": "generate_new",
+    "focusConcepts": [
+      "quantum_entanglement",
+      "Bell states"
+    ],
+    "difficulty": "standard",
+    "includeYoutube": false,
+    "rationale": "Based on your request, we'll generate a new study plan to introduce you to quantum entanglement and Bell states.",
+    "reusedVideoUrl": null
+  },
+  "duration_ms": 9647.59,
+  "llm_calls": 2,
+  "tools_called": [
+    "get_learner_profile",
+    "find_existing_assets"
+  ],
+  "fallback_used": false
+}

@@ -1,0 +1,19 @@
+{
+  "plan": {
+    "action": "generate_new",
+    "focusConcepts": [
+      "single_slit_minima"
+    ],
+    "difficulty": "standard",
+    "includeYoutube": false,
+    "rationale": "Based on your current understanding, we'll generate a new lesson to introduce you to single slit diffraction.",
+    "reusedVideoUrl": null
+  },
+  "duration_ms": 9914.46,
+  "llm_calls": 2,
+  "tools_called": [
+    "get_learner_profile",
+    "find_existing_assets"
+  ],
+  "fallback_used": false
+}

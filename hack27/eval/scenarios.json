@@ -1,7 +1,7 @@
 [
   {
     "id": "scenario_01_no_history",
-    "name": "No History",
+    "name": "No History (Cold Start)",
     "description": "Brand new learner exploring Quantum Entanglement for the first time with zero quiz attempts.",
     "prompt": "Visualize quantum entanglement and Bell states",
     "topic_hint": "quantum_entanglement",
@@ -11,7 +11,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Learner has zero historical data on this topic. System must initialize with standard exploratory material, without false assumptions of weakness."
   },
   {
     "id": "scenario_02_one_unlucky_miss",
@@ -27,7 +28,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: A single mistake on a 1-question sample does not indicate systemic weakness. Evidence threshold requires >= 3 attempts before labeling as weak."
   },
   {
     "id": "scenario_03_two_misses_insufficient_evidence",
@@ -44,7 +46,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: 2 attempts is still insufficient statistical confidence (< 3). Status must remain unknown to prevent overreacting to noise."
   },
   {
     "id": "scenario_04_consistent_weakness_single",
@@ -63,7 +66,8 @@
       "action": "remedial",
       "weak_concepts": ["doppler_shift_formula"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: 4 failed attempts provides weighted evidence ~3.8 >= 3.0 and Laplace mastery = 1/5.8 = 0.17 (< 0.60). Triggers remedial review focusing on doppler_shift_formula."
   },
   {
     "id": "scenario_05_consistent_weakness_multiple",
@@ -90,7 +94,8 @@
       "action": "remedial",
       "weak_concepts": ["frequency_shift", "wave_speed"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Two distinct concepts have verified weakness (frequency_shift mastery ~0.17, wave_speed mastery ~0.33), while relative_motion is strong (~0.83). Remedial plan must target the two weak concepts in order of lowest mastery."
   },
   {
     "id": "scenario_06_weak_concepts_exceeding_max_focus",
@@ -121,7 +126,8 @@
       "action": "remedial",
       "weak_concepts": ["carnot_efficiency", "entropy_change", "heat_capacities"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Pedagogical cap limits remedial focus to at most 3 concepts to avoid cognitive overload. The first 3 weakest concepts are selected."
   },
   {
     "id": "scenario_07_mixed_performance_no_weak",
@@ -142,7 +148,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Laplace smoothed mastery is 60% on both concepts. Not weak (< 60%) and not strong (>= 80%). Standard generation continues without remedial intervention."
   },
   {
     "id": "scenario_08_all_strong_sufficient_evidence",
@@ -165,7 +172,8 @@
       "action": "advanced",
       "weak_concepts": [],
       "difficulty": "challenging"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: All known concepts demonstrate proven high mastery (>= 80%) with sufficient evidence (>= 3). Eligible for advanced challenging visualization."
   },
   {
     "id": "scenario_09_all_correct_insufficient_evidence",
@@ -181,7 +189,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: 1 correct answer (raw 100%) has evidence 1 < 3. Laplace smoothed score is (1+1)/(1+2) = 66.7%. Must NOT be marked strong prematurely. Standard progression applies."
   },
   {
     "id": "scenario_10_stale_history",
@@ -200,7 +209,8 @@
       "action": "generate_new",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Attempts from 80-90 days ago decay by factor 2^(-90/14) = 0.011. Total weighted evidence < 0.1 (< 3 threshold). The model treats the stale weakness as unknown, allowing fresh start."
   },
   {
     "id": "scenario_11_recent_video_reuse",
@@ -217,7 +227,8 @@
       "action": "reuse_existing",
       "weak_concepts": [],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Video rendered 4 hours ago (< 24h) and zero weak concepts detected. Reusing existing asset saves computation and avoids redundant renders."
   },
   {
     "id": "scenario_12_recent_video_with_weakness",
@@ -239,7 +250,8 @@
       "action": "remedial",
       "weak_concepts": ["calvin_cycle_fixation"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Even though an asset was created recently, diagnosed weakness on calvin_cycle_fixation overrides asset reuse to produce a targeted remedial animation."
   },
   {
     "id": "scenario_13_topic_label_drift",
@@ -258,31 +270,54 @@
       "action": "remedial",
       "weak_concepts": ["frequency_shift"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Even with non-standard user phrasing ('shift in sound pitch as ambulance approaches'), the topic resolves to doppler_effect and targets historical weakness on frequency_shift."
   },
   {
-    "id": "scenario_14_borderline_mastery_threshold",
-    "name": "Borderline Mastery Threshold",
-    "description": "Learner got 2/4 correct (mastery = 3/6 = 0.50, < 0.60) with evidence = 4 (>= 3). Borderline case marks concept as weak.",
-    "prompt": "Harmonic oscillator motion",
-    "topic_hint": "harmonic_oscillator",
+    "id": "scenario_14_conflicting_signals_recent_guess",
+    "name": "Conflicting Signals (Recent Lucky Guess)",
+    "description": "Learner failed 4 times (0/4), then got 1 lucky correct answer today. Weighted evidence ~4.5, mastery ~0.31 (< 0.60). Status remains weak.",
+    "prompt": "Newton third law action reaction forces",
+    "topic_hint": "newtons_laws",
     "recent_asset": null,
     "quiz_history": [
-      { "concept": "restoring_force", "correct": false, "days_ago": 0.8 },
-      { "concept": "restoring_force", "correct": false, "days_ago": 0.6 },
-      { "concept": "restoring_force", "correct": true, "days_ago": 0.4 },
-      { "concept": "restoring_force", "correct": true, "days_ago": 0.2 }
+      { "concept": "action_reaction_pairs", "correct": false, "days_ago": 2.0 },
+      { "concept": "action_reaction_pairs", "correct": false, "days_ago": 1.5 },
+      { "concept": "action_reaction_pairs", "correct": false, "days_ago": 1.0 },
+      { "concept": "action_reaction_pairs", "correct": false, "days_ago": 0.5 },
+      { "concept": "action_reaction_pairs", "correct": true, "days_ago": 0.05 }
     ],
     "expected": {
       "action": "remedial",
-      "weak_concepts": ["restoring_force"],
+      "weak_concepts": ["action_reaction_pairs"],
       "difficulty": "standard"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: 1 recent correct answer does not overcome 4 recent failures. The Bayesian Laplace smoothing correctly holds mastery at ~31%, preserving remedial focus."
   },
   {
-    "id": "scenario_15_high_volume_advanced_mastery",
+    "id": "scenario_15_free_text_intent_remedial",
+    "name": "Free-Text Intent Explicit Remedial Request",
+    "description": "User explicitly writes 'I keep getting torque problems wrong, help me review'. History confirms weakness on lever_arm.",
+    "prompt": "I keep getting torque problems wrong, help me review the fundamentals",
+    "topic_hint": "rotational_mechanics",
+    "recent_asset": null,
+    "quiz_history": [
+      { "concept": "lever_arm", "correct": false, "days_ago": 1.0 },
+      { "concept": "lever_arm", "correct": false, "days_ago": 0.7 },
+      { "concept": "lever_arm", "correct": false, "days_ago": 0.4 },
+      { "concept": "lever_arm", "correct": false, "days_ago": 0.1 }
+    ],
+    "expected": {
+      "action": "remedial",
+      "weak_concepts": ["lever_arm"],
+      "difficulty": "standard"
+    },
+    "ground_truth_rationale": "Hand-written: Free-text user request aligns with empirical quiz history showing lever_arm failure (mastery ~0.17). Action must be remedial targeting lever_arm."
+  },
+  {
+    "id": "scenario_16_high_volume_advanced_mastery",
     "name": "High Volume Advanced Mastery",
-    "description": "Learner answered 15 questions across 3 concepts with 14/15 correct (mastery > 0.85 each, high evidence). Action = advanced.",
+    "description": "Learner answered 15 questions across 3 concepts with 15/15 correct (mastery > 0.85 each, high evidence). Action = advanced.",
     "prompt": "Matrix multiplication and linear transformations",
     "topic_hint": "matrix_transformations",
     "recent_asset": null,
@@ -307,6 +342,7 @@
       "action": "advanced",
       "weak_concepts": [],
       "difficulty": "challenging"
-    }
+    },
+    "ground_truth_rationale": "Hand-written: Long study history with sustained high accuracy across all concepts (15/15). Unambiguously qualifies for advanced study difficulty."
   }
 ]

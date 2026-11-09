@@ -1,0 +1,20 @@
+{
+  "plan": {
+    "action": "remedial",
+    "focusConcepts": [
+      "frequency_shift",
+      "wave_speed"
+    ],
+    "difficulty": "standard",
+    "includeYoutube": true,
+    "rationale": "Based on your performance, we've identified that 'frequency_shift' and 'wave_speed' are areas where you could use some extra support. This remedial plan will help strengthen your understanding of these core concepts.",
+    "reusedVideoUrl": null
+  },
+  "duration_ms": 8615.39,
+  "llm_calls": 2,
+  "tools_called": [
+    "get_learner_profile",
+    "find_existing_assets"
+  ],
+  "fallback_used": false
+}

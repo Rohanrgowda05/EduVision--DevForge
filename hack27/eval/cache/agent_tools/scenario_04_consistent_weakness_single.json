@@ -1,0 +1,18 @@
+{
+  "plan": {
+    "action": "remedial",
+    "focusConcepts": [
+      "doppler_shift_formula"
+    ],
+    "difficulty": "standard",
+    "includeYoutube": true,
+    "rationale": "Based on your performance, we'll focus on strengthening your understanding of the doppler shift formula with a remedial plan, including helpful YouTube resources.",
+    "reusedVideoUrl": null
+  },
+  "duration_ms": 8071.01,
+  "llm_calls": 2,
+  "tools_called": [
+    "get_learner_profile"
+  ],
+  "fallback_used": false
+}
